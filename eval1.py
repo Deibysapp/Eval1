@@ -10,6 +10,7 @@ st.set_page_config(
     page_icon=".streamlit/logo.JPEG", 
     layout="wide"
 )
+st.subheader("Evaluacion de Asesores 2026")
 
 # --- ESTRUCTURA ---
 estructura = {
