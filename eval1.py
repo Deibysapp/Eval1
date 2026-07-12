@@ -43,9 +43,9 @@ acciones = st.text_area("Acciones y acuerdos hasta el próximo contacto", key="a
 # Sección de fotos
 st.subheader("📸 Registro Fotografico (Hoja 2)")
 nombres_fotos = [
-    "Buena presencia y puntualidad", "Ejecución productos stock", "Presencia material POP", 
-    "Cumplimiento Planograma", "Exhibidores no invadidos", "Fachada PDB", 
-    "Anaquel principal", "Chequeado", "Exhibición adicional"
+    "Buena presencia y puntualidad", "Ejecución productos Merchandising", "Presencia material POP", 
+    "Cumplimiento Planograma", "Exhibidores no invadidos", "Fachada PDV", 
+    "Anaquel principal", "Checkout", "Exhibición adicional"
 ]
 mapeo_fotos = {}
 for nombre in nombres_fotos:
