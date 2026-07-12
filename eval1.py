@@ -10,7 +10,6 @@ st.set_page_config(
     page_icon=".streamlit/logo.JPEG", 
     layout="wide"
 )
-st.subheader("Desarrollado por Deibys Ibañes 2026")
 
 # --- ESTRUCTURA ---
 estructura = {
