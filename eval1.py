@@ -18,7 +18,7 @@ estructura = {
     "Pasos de la Visita Organizada": [("Preparación de la visita (Planificacion mensual, semanal, diaria)", 16), ("Contacto y acercamiento", 17), ("Chequeo de Inventario", 18), ("Identificación de oportunidades en el PDV", 19), ("Ejecución del producto en stock de inventario (Merchandising)", 20), ("Asesoramiento y negociación del pedido", 21), ("Cobranza y cierre de la visita (Indicacion de Politicas)", 22)],
     "Dominio de la Venta": [("Gestiona todo el portafolio de productos", 24), ("Ofrece innovaciones o promociones", 25), ("Revisión y actualización de indicadores de precios en PDV", 26), ("Negociacion de espacios adicionales", 27)],
     "Material P.O.P y Planogramas": [("Presencia de material P.O.P vigente", 29), ("Evalua el cumplimiento del Planograma de Marcas", 30), ("Garantiza que los exhibidores o espacios negociados no esten invadidos", 31), ("Evalua limpieza de los exhibidores o espacios negociados", 32)],
-    "PROFUNDIDAD DE LINEAS": [("Ofrece Marcas Parmalat, PAVECA, Polar, Pepsi", 34), ("Ofrece Marcas Isola, Alfonzo Rivas", 35), ("Ofrece Marcas Alinieve, Incosa, Alesca", 36), ("Ofrece Marcas Miceven, Puig, Gaduca, Calven", 37)]
+    "PROFUNDIDAD DE LINEAS": [("Ofrece Marcas Parmalat, PAVECA, Polar, Pepsi", 34), ("Ofrece Marcas Isola, Alfonzo Rivas", 35), ("Ofrece Marcas Alinieve/Giomar, Incosa, Alesca", 36), ("Ofrece Marcas Miceven, Puig, Gaduca, Calven", 37)]
 }
 
 # --- INTERFAZ ---
