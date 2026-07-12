@@ -82,9 +82,9 @@ def exportar_excel():
     
     # Insertar fotos en hoja Registro Fotografico
     celdas = {
-        'Buena presencia y puntualidad': 'D2', 'Ejecución productos stock': 'D3', 'Presencia material POP': 'D4', 
-        'Cumplimiento Planograma': 'D5', 'Exhibidores no invadidos': 'D6', 'Fachada PDB': 'D7', 
-        'Anaquel principal': 'D8', 'Chequeado': 'D9', 'Exhibición adicional': 'D10'
+        'Buena presencia y puntualidad': 'D2', 'Ejecución productos Merchandising': 'D3', 'Presencia material POP': 'D4', 
+        'Cumplimiento Planograma': 'D5', 'Exhibidores no invadidos': 'D6', 'Fachada PDV': 'D7', 
+        'Anaquel principal': 'D8', 'Checkout': 'D9', 'Exhibición adicional': 'D10'
     }
     
     ws_fotos.column_dimensions['D'].width = 30 # Ajuste ancho
