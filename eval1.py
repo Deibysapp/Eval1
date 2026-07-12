@@ -7,7 +7,7 @@ from PIL import Image
 
 st.set_page_config(
     page_title="Evaluación Asesores GO", 
-    page_icon=".streamlit/logo.JPEG", 
+    page_icon=".streamlit/logo.PNG", 
     layout="wide"
 )
 st.subheader("Evaluacion de Asesores 2026")
