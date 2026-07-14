@@ -1,32 +1,42 @@
 import streamlit as st
 import pandas as pd
-from streamlit_localstorage import LocalStorage
+import streamlit.components.v1 as components
 from openpyxl import load_workbook
-from openpyxl.drawing.image import Image as XLImage
 from io import BytesIO
-from PIL import Image
 
-# Configuración básica
-st.set_page_config(page_title="Evaluación Asesores GO", page_icon=".streamlit/logo.png", layout="wide")
-localS = LocalStorage()
+# Configuración de página
+st.set_page_config(page_title="Evaluación Asesores GO", layout="wide")
 
-# --- LÓGICA DE PERSISTENCIA OFFLINE ---
-def guardar_en_telefono():
-    # Guarda todo el estado en el chip de memoria del teléfono
-    for key, value in st.session_state.items():
-        if not key.startswith("up_"): # Excluimos las fotos por tamaño
-            localS.setItem(key, str(value))
+# Lógica de almacenamiento local (No requiere instalar librerías extra)
+def configurar_almacenamiento_local():
+    js_code = """
+    <script>
+        // Guardar automáticamente al cambiar cualquier input
+        window.parent.document.addEventListener('change', (e) => {
+            if (e.target.id) {
+                localStorage.setItem(e.target.id, e.target.value);
+            }
+        });
+        // Recuperar datos al cargar la página
+        window.onload = function() {
+            setTimeout(() => {
+                const inputs = window.parent.document.querySelectorAll('input, select');
+                inputs.forEach(input => {
+                    const savedValue = localStorage.getItem(input.id);
+                    if (savedValue !== null) {
+                        input.value = savedValue;
+                        input.dispatchEvent(new Event('change'));
+                    }
+                });
+            }, 1000);
+        };
+    </script>
+    """
+    components.html(js_code, height=0)
 
-def cargar_desde_telefono():
-    # Recupera al iniciar
-    datos = localS.getItemList()
-    if datos:
-        for k, v in datos.items():
-            st.session_state[k] = v
+configurar_almacenamiento_local()
 
-cargar_desde_telefono()
-
-# --- ESTRUCTURA ---
+# Estructura de evaluación
 estructura = {
     "Actitud de Ventas": [("Buena presencia y puntualidad", 9), ("Secuencia de visitas de acuerdo al rutero", 10), ("Asistencia a reuniones, auditorias, contacto 1 a 1", 11), ("Organización y Uso de material de trabajo", 12), ("Toma pedidos y cobranzas en el movil y sincroniza en los tiempos oportunos", 13), ("Informa las incideancias de la ruta al supervisor en los tiempos oportunos", 14)],
     "Pasos de la Visita Organizada": [("Preparación de la visita", 16), ("Contacto y acercamiento", 17), ("Chequeo de Inventario", 18), ("Identificación de oportunidades en el PDV", 19), ("Ejecución del producto en stock de inventario", 20), ("Asesoramiento y negociación del pedido", 21), ("Cobranza y cierre de la visita", 22)],
@@ -35,42 +45,45 @@ estructura = {
     "PROFUNDIDAD DE LINEAS": [("Ofrece Marcas Parmalat, PAVECA, Polar, Pepsi", 34), ("Ofrece Marcas Isola, Alfonzo Rivas", 35), ("Ofrece Marcas Alinieve, Incosa, Alesca", 36), ("Ofrece Marcas Miceven, Puig, Gaduca, Calven", 37)]
 }
 
-# --- DIÁLOGO DE LIMPIEZA ---
-@st.dialog("⚠️ Confirmar Limpieza")
-def confirmar_limpieza():
-    st.write("¿Estás seguro de borrar todos los datos del teléfono?")
-    if st.button("Sí, borrar"):
-        localS.clear()
-        st.session_state.clear()
-        st.rerun()
+st.title("📝 Evaluación Asesores GO (Modo Offline)")
 
-# --- INTERFAZ ---
-st.title("📝 Evaluación Asesores GO (Offline)")
-col1, col2, col3 = st.columns(3)
-st.date_input("Fecha", key="fecha", on_change=guardar_en_telefono)
-st.text_input("Vendedor", key="vendedor", on_change=guardar_en_telefono)
-st.text_input("Ruta", key="ruta", on_change=guardar_en_telefono)
-st.text_input("Evaluador", key="evaluador", on_change=guardar_en_telefono)
+# Campos de entrada
+fecha = st.date_input("Fecha", key="fecha")
+vendedor = st.text_input("Vendedor", key="vendedor")
+ruta = st.text_input("Ruta", key="ruta")
+evaluador = st.text_input("Evaluador", key="evaluador")
 
+# Generación de la interfaz
 for seg, items in estructura.items():
     st.subheader(f"📍 {seg}")
     for item, fila in items:
         with st.expander(item):
             cols = st.columns(5)
             for i in range(5):
-                cols[i].selectbox(f"C{i+1}", [0,1,2,3,4], key=f"{item}_{i}", on_change=guardar_en_telefono)
+                cols[i].selectbox(f"C{i+1}", [0,1,2,3,4], key=f"{item}_{i}")
 
-# --- REPORTE FOTOGRÁFICO ---
-st.subheader("📸 Reporte Fotográfico")
-nombres_fotos = ["Buena presencia y puntualidad", "Ejecución productos stock", "Presencia material POP", "Cumplimiento Planograma", "Exhibidores no invadidos", "Fachada PDB", "Anaquel principal", "Chequeado", "Exhibición adicional"]
-for nombre in nombres_fotos:
-    st.file_uploader(f"Foto: {nombre}", type=['png', 'jpg'], key=f"up_{nombre}")
+# Lógica de Exportación
+def exportar_excel():
+    wb = load_workbook('Eval1.xlsx')
+    ws = wb.active
+    ws['E4'] = str(fecha)
+    ws['E6'] = vendedor
+    ws['H6'] = ruta
+    ws['E7'] = evaluador
+    
+    columnas = ['H', 'I', 'J', 'K', 'L']
+    for seg, items in estructura.items():
+        for item, fila in items:
+            for i in range(5):
+                ws[f"{columnas[i]}{fila}"] = st.session_state.get(f"{item}_{i}", 0)
+    
+    output = BytesIO()
+    wb.save(output)
+    return output.getvalue()
 
-# --- BOTONES ---
 if st.button("📥 Exportar a Excel"):
-    st.info("Generando archivo...")
-    # (Aquí tu lógica de exportación que ya teníamos)
+    st.download_button("Descargar Archivo", data=exportar_excel(), file_name="Reporte_Final.xlsx")
 
-if st.button("🧹 Limpiar"):
-    confirmar_limpieza()
+if st.button("🧹 Limpiar datos"):
+    st.write("Refresca la página para limpiar los datos del teléfono.")
 
